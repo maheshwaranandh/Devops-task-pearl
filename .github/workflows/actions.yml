@@ -21,8 +21,8 @@ jobs:
 
     - name: Build and push Docker image to Docker Hub
       run: |
-        docker build -t node-hello .
-        docker push node-hello:latest
+        docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/node-hello .
+        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/node-hello:latest
 
     - name: Deploy to ECS
       run: |
