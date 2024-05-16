@@ -13,15 +13,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Login to AWS ECR
-      uses: aws-actions/amazon-ecr-login@v2
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-    - name: Build, tag, and push Docker image to Amazon ECR
+    - name: Build and push Docker image to Docker Hub
       run: |
-        docker build -t your-docker-image-name .
-        docker tag your-docker-image-name:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/your-repo-name:latest
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/your-repo-name:latest
+        docker build -t node-hello .
+        docker push node-hello:latest
 
     - name: Deploy to ECS
       run: |
-        aws ecs update-service --cluster your-cluster-name --service your-service-name --force-new-deployment
+        # Assuming you have an ECS task definition and service already created
+        # Update the ECS service with the new task definition revision
+        aws ecs update-service --cluster my-cluster --service my-service --force-new-deployment
